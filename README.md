@@ -1,6 +1,6 @@
 <b>You must provide a written project proposal. The proposal should contain:</b>
 
-    1.  List of the group members (Up to 4 group members – the larger the group, the more strenuousthe milestones should be)
+    1.  List of the group members
 		- Jacob Sorenson
 		- Jared Knight
 	
