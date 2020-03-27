@@ -5,6 +5,8 @@ List of the group members.
 	<li>Jacob Sorenson</li> 
 	<li>Jared Knight</li>
 	</ul>
+
+
 <b>High-level description of your application – 4-5 lines of text.</b>
 
 <p>A handheld game which uses a screen to display a ball that is able to roll around. By tilting 
@@ -14,10 +16,12 @@ red LED (level 1) will begin blinking slowly, increading in frequency as targets
 it locks in solid moving onto the next level (green). Following the same pattern until green 
 locks in and the game is won. If the user hits a wall the leds will be reset to the previous 
 locked level.</p>
-		
+
+
 <b>Functional block diagram, containing all the hardware/software blocks of your project.</b>
 
 ![GitHub Logo](/images/Hardware_Block_DIagram.png)
+
 
 <b>A list of 4 implementations milestones. The 4th milestone is due with the final delivery (after finals week).</b>
 	<ul>
