@@ -10,10 +10,12 @@ You must provide a written project proposal. The proposal should contain:
 		
     3.  Functional block diagram, containing all the hardware/software blocks of your project.
 
+	![GitHub Logo](/images/Hardware_Block_DIagram.png)
+
     4.  A list of 4 implementations milestones. The 4th milestone is due with the final delivery (afterfinals week).
 		- Milestone 1: Create functioning gyroscope movement with expected screen bounds. Get Parts needed for project.
 		- Milestone 2: Figure out Screen display and positioning of Items.
 		- Milestone 3: Connect Gyroscope data to movement of ball.
 		- Milestone 4: Trigger LED when target is met. Display winning screen.
 
-![GitHub Logo](/images/Hardware_Block_DIagram.png)
+
