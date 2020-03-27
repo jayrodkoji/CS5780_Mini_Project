@@ -15,3 +15,5 @@ You must provide a written project proposal. The proposal should contain:
 		- Milestone 2: Figure out Screen display and positioning of Items.
 		- Milestone 3: Connect Gyroscope data to movement of ball.
 		- Milestone 4: Trigger LED when target is met. Display winning screen.
+
+![GitHub Logo](/images/Hardware_Block_DIagram.png)
