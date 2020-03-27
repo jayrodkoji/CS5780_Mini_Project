@@ -10,13 +10,7 @@ List of the group members.
 
 <b>High-level description of your application – 4-5 lines of text.</b>
 
-<p>A handheld game which uses a screen to display a ball that is able to roll around. By tilting 
-the device the user is able to control the velcity of the ball. The objective of this game is 
-to move the ball into target locations which will appear as previous targets are reached. The 
-red LED (level 1) will begin blinking slowly, increading in frequency as targets are hit until 
-it locks in solid moving onto the next level (green). Following the same pattern until green 
-locks in and the game is won. If the user hits a wall the leds will be reset to the previous 
-locked level.</p>
+<p>A handheld game which uses a screen to display a ball that is able to roll around. By tilting the device the user is able to control the velcity of the ball. The objective of this game is to move the ball into target locations which will appear as previous targets are reached. The red LED (level 1) will begin blinking slowly, increading in frequency as targets are hit until it locks in solid moving onto the next level (green). Following the same pattern until green locks in and the game is won. If the user hits a wall the leds will be reset to the previous locked level.</p>
 
 
 <b>Functional block diagram, containing all the hardware/software blocks of your project.</b>
