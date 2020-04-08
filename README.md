@@ -21,7 +21,7 @@
 <b>Milestones</b>
 	<ul>
 	<li>Milestone 1: Get board needed for project. Initialize gyroscope to get x and y values.</li>
-	<li>Milestone 2: Create images (backgrounds with targets and ball) needed to display and display layer 1 (background with targets) and layer 2 (ball) images.</li>
+	<li>Milestone 2: Create images (backgrounds with targets and ball) needed to display. Display layer 1 (background with targets) and layer 2 (ball) images.</li>
 	<li>Milestone 3: Connect gyroscope x and y data to movement of ball.</li>
 	<li>Milestone 4: Trigger LED when target is met. Display winning screen.</li>
 	</ul>
