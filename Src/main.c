@@ -20,8 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f429xx.h"
-#include "helper_functions.h"
 #include "main.h"
+#include "Helper/l3gd20.h"
+#include "Helper/led.h"
+#include "Helper/spi.h"
+#include "Helper/usart.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -152,7 +155,7 @@ int main(void)
 
   const uint16_t HFP = 10;
   const uint16_t HSYNC = 10;
-  const uint16_t HBP = 10;
+  const uint16_t HBP = 20; // was 10 but seemed wrong per datasheet
 
   const uint16_t VFP = 4;
   const uint16_t VSYNC = 2;
@@ -168,9 +171,23 @@ int main(void)
   LTDC->AWCR = (ACTIVE_W << 16) | ACTIVE_H;
   LTDC->TWCR = (TOTAL_W << 16) | TOTAL_H;
   LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos; // RED
+  LTDC_Layer1->DCCR = 0xFF << LTDC_LxDCCR_DCALPHA_Pos | 0xFF << LTDC_LxDCCR_DCGREEN_Pos;
+    
+  /* configure layer 1  From http:\//www.lucadavidian.com/2017/10/02/stm32-using-the-ltdc-display-controller/*/
+  LTDC_Layer1->WHPCR = 269 << LTDC_LxWHPCR_WHSPPOS_Pos | 30 << LTDC_LxWHPCR_WHSTPOS_Pos;
+  LTDC_Layer1->WVPCR = 323 << LTDC_LxWVPCR_WVSPPOS_Pos | 4 << LTDC_LxWVPCR_WVSTPOS_Pos;
+  LTDC_Layer1->PFCR = 0x01;
+  //LTDC_Layer1->CFBAR = (uint32_t)framebuffer;
+    
+  LTDC_Layer1->CFBLR = 240 * 3 << LTDC_LxCFBLR_CFBP_Pos | 240 * 3 + 3 << LTDC_LxCFBLR_CFBLL_Pos;
+  LTDC_Layer1->CFBLNR = 320;
+    
+  LTDC_Layer1->DCCR = 0xFF << LTDC_LxDCCR_DCALPHA_Pos | 0xFF << LTDC_LxDCCR_DCGREEN_Pos;
+  LTDC_Layer1->CACR = 255;
+  LTDC_Layer1->CR |= LTDC_LxCR_LEN;
+  // end layer1 config
 
   LTDC->SRCR = LTDC_SRCR_IMR;
-  LTDC->GCR |= LTDC_GCR_LTDCEN;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -215,6 +232,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
   /** Configure the main internal regulator output voltage 
   */
@@ -243,6 +261,13 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /* initialize LTDC LCD clock */
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
+  PeriphClkInitStruct.PLLSAI.PLLSAIN = 60;
+  PeriphClkInitStruct.PLLSAI.PLLSAIR = 5;
+  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_4;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 }
 
 /* USER CODE BEGIN 4 */
