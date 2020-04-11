@@ -102,6 +102,8 @@ int main(void)
   {
     set_green_LED(1);
   }
+  set_red_LED(1);
+  update_green_LED_timer(500);
 
   init_L3GD20();
 
