@@ -29,10 +29,10 @@ void init_SPI5()
     RCC->APB2ENR |= RCC_APB2ENR_SPI5EN; // Enable SPI5 clock
 
     // Since PCLK frequency is 16MHz, set BR[2:0] to 0 for 8MHz clock
-    SPI5->CR1 &= ~SPI_CR1_BR_Msk;
-    SPI5->CR2 |= SPI_CR2_FRF; // TI mode
-    SPI5->CR1 |= SPI_CR1_DFF; // 16-bit data format
-    SPI5->CR1 &= ~SPI_CR1_LSBFIRST; // MSB first
+    SPI5->CR1 &= ~SPI_CR1_SPE; // Disable
+    SPI5->CR1 |= SPI_CR1_BR_2; // 32 prescaler
+    SPI5->CR1 |= SPI_CR1_SSI; // Software slave mode
+    SPI5->CR1 |= SPI_CR1_SSM; // Software slave mode
     SPI5->CR1 |= SPI_CR1_MSTR; // Master mode
     SPI5->CR1 |= SPI_CR1_SPE; // Enable
 }

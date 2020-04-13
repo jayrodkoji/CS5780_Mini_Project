@@ -24,7 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32f429xx.h"
-#include "tm_stm32_lcd.h"
 #include "Helper/l3gd20.h"
 #include "Helper/lcd.h"
 #include "Helper/led.h"
@@ -90,9 +89,9 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  init_SPI5();
 
   init_LCD();
-  TM_LCD_Init();
   init_LTDC();
 
   LTDC->GCR &= ~LTDC_GCR_LTDCEN;

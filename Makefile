@@ -66,12 +66,6 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c \
-STM32_LIBRARIES/tm_stm32_lcd.c \
-STM32_LIBRARIES/tm_stm32_spi.c \
-STM32_LIBRARIES/tm_stm32_gpio.c \
-STM32_LIBRARIES/tm_stm32_dma2d_graphic.c \
-STM32_LIBRARIES/tm_stm32_sdram.c \
-STM32_LIBRARIES/tm_stm32_fonts.c \
 Src/system_stm32f4xx.c  
 
 # ASM sources
