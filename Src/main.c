@@ -26,6 +26,7 @@
 #include "stm32f429xx.h"
 #include "tm_stm32_lcd.h"
 #include "Helper/l3gd20.h"
+#include "Helper/lcd.h"
 #include "Helper/led.h"
 #include "Helper/spi.h"
 #include "Helper/usart.h"
@@ -89,30 +90,22 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+
+  init_LCD();
   TM_LCD_Init();
+  init_LTDC();
+
   LTDC->GCR &= ~LTDC_GCR_LTDCEN;
 
   LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos;
-
-  LTDC_Layer1->WHPCR = 110 << LTDC_LxWHPCR_WHSPPOS_Pos | 100 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
-  LTDC_Layer1->WVPCR = 110 << LTDC_LxWVPCR_WVSPPOS_Pos | 100 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
-  LTDC_Layer1->PFCR = 0x01;   // RGB888 pixel format
-  LTDC_Layer1->CACR = 255;                                                                        // constant alpha
-  LTDC_Layer1->CR |= LTDC_LxCR_LEN;                                                               // enable layer1
-
-  LTDC_Layer2->WHPCR = 150 << LTDC_LxWHPCR_WHSPPOS_Pos | 140 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
-  LTDC_Layer2->WVPCR = 150 << LTDC_LxWVPCR_WVSPPOS_Pos | 140 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
-  LTDC_Layer2->PFCR = 0x01;   // RGB888 pixel format
-  LTDC_Layer2->CACR = 255;                                                                        // constant alpha
-  LTDC_Layer2->CR |= LTDC_LxCR_LEN;                                                               // enable layer1
-
 
   LTDC->SRCR = LTDC_SRCR_IMR;                                                                     // immediate shadow registers reload 
 
   LTDC->GCR |= LTDC_GCR_LTDCEN;
 
-  TM_LCD_SetLayer1();
-  TM_LCD_DrawFilledCircle(100, 100, 10, LCD_COLOR_GREEN);
+  draw_rectangle(LTDC_Layer1, 100, 110, 100, 110);
+  draw_rectangle(LTDC_Layer2, 200, 210, 200, 210);
+
 
   /* USER CODE END SysInit */
 
@@ -151,9 +144,7 @@ int main(void)
   {
     
     HAL_Delay(1000);
-    LTDC_Layer1->WHPCR = 110 << LTDC_LxWHPCR_WHSPPOS_Pos | 100 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
-    LTDC_Layer1->WVPCR = 210 << LTDC_LxWVPCR_WVSPPOS_Pos | 200 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
-    LTDC->SRCR = LTDC_SRCR_IMR;                                                                     // immediate shadow registers reload 
+    draw_rectangle(LTDC_Layer1, 100, 110, 200, 210);
     /* USER CODE END WHILE */
   //  HAL_Delay(100);
   //  get_XY_data(&X_data, &Y_data);

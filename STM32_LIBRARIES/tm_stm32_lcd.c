@@ -116,67 +116,67 @@ typedef struct _TM_LCD_INT_t {
 static TM_LCD_INT_t LCD;
 
 TM_LCD_Result_t TM_LCD_Init(void) {
-	TM_DMA2DGRAPHIC_INT_Conf_t DMA2DConf;
+	// TM_DMA2DGRAPHIC_INT_Conf_t DMA2DConf;
 	
 	/* Init SDRAM */
-	if (!TM_SDRAM_Init()) {
-		/* Return error */
-		return TM_LCD_Result_SDRAM_Error;
-	}
+	// if (!TM_SDRAM_Init()) {
+	// 	/* Return error */
+	// 	return TM_LCD_Result_SDRAM_Error;
+	// }
 	
 	/* Fill default structure */
-	LCD.Width = LCD_PIXEL_WIDTH;
-	LCD.Height = LCD_PIXEL_HEIGHT;
-	LCD.CurrentFrameBuffer = LCD_FRAME_BUFFER;
-	LCD.FrameStart = LCD_FRAME_BUFFER;
-	LCD.FrameOffset = LCD_BUFFER_OFFSET;
-	LCD.CurrentFont = &TM_Font_11x18;
-	LCD.ForegroundColor = LCD_COLOR_BLACK;
-	LCD.BackgroundColor = LCD_COLOR_WHITE;
-	LCD.Orientation = 1;
+	// LCD.Width = LCD_PIXEL_WIDTH;
+	// LCD.Height = LCD_PIXEL_HEIGHT;
+	// LCD.CurrentFrameBuffer = LCD_FRAME_BUFFER;
+	// LCD.FrameStart = LCD_FRAME_BUFFER;
+	// LCD.FrameOffset = LCD_BUFFER_OFFSET;
+	// LCD.CurrentFont = &TM_Font_11x18;
+	// LCD.ForegroundColor = LCD_COLOR_BLACK;
+	// LCD.BackgroundColor = LCD_COLOR_WHITE;
+	// LCD.Orientation = 1;
 	
 	/* Set orientation */
-	TM_LCD_SetOrientation(LCD.Orientation);
+	// TM_LCD_SetOrientation(LCD.Orientation);
 	
 	/* Set configrations for DMA2D */
-	DMA2DConf.BufferStart = LCD_FRAME_BUFFER;
-	DMA2DConf.BufferOffset = LCD_BUFFER_OFFSET;
-	DMA2DConf.BytesPerPixel = LCD_PIXEL_SIZE;
-	DMA2DConf.Width = LCD_PIXEL_WIDTH;
-	DMA2DConf.Height = LCD_PIXEL_HEIGHT;
-	DMA2DConf.Orientation = 1;
+	// DMA2DConf.BufferStart = LCD_FRAME_BUFFER;
+	// DMA2DConf.BufferOffset = LCD_BUFFER_OFFSET;
+	// DMA2DConf.BytesPerPixel = LCD_PIXEL_SIZE;
+	// DMA2DConf.Width = LCD_PIXEL_WIDTH;
+	// DMA2DConf.Height = LCD_PIXEL_HEIGHT;
+	// DMA2DConf.Orientation = 1;
 	
 	/* Init LCD pins */
-	TM_LCD_INT_InitPins();
+	// TM_LCD_INT_InitPins();
 	
 	/* Init LCD dependant settings */
 	TM_LCD_INT_InitLCD();
 	
 	/* Init LTDC peripheral */
-	TM_LCD_INT_InitLTDC();
+	// TM_LCD_INT_InitLTDC();
 	
 	/* Init LTDC layers */
-	TM_LCD_INT_InitLayers();
+	// TM_LCD_INT_InitLayers();
 	
 	/* Init DMA2D GRAPHICS */
-	TM_DMA2DGRAPHIC_Init();
+	// TM_DMA2DGRAPHIC_Init();
 	
 	/* Set settings */
-	TM_INT_DMA2DGRAPHIC_SetConf(&DMA2DConf);
+	// TM_INT_DMA2DGRAPHIC_SetConf(&DMA2DConf);
 	
 	/* Enable LCD */
 	TM_LCD_DisplayOn();
 	
-	/* Set layer 1 as active layer */
-	TM_LCD_SetLayer1();
-	TM_LCD_Fill(LCD_COLOR_WHITE);
-	TM_LCD_SetLayer2();
-	TM_LCD_Fill(LCD_COLOR_WHITE);
-	TM_LCD_SetLayer1();
+	// /* Set layer 1 as active layer */
+	// TM_LCD_SetLayer1();
+	// TM_LCD_Fill(LCD_COLOR_WHITE);
+	// TM_LCD_SetLayer2();
+	// TM_LCD_Fill(LCD_COLOR_WHITE);
+	// TM_LCD_SetLayer1();
 	
-	/* Set layer 1 as active layer */
-	TM_LCD_SetLayer1Opacity(255);
-	TM_LCD_SetLayer2Opacity(0);
+	// /* Set layer 1 as active layer */
+	// TM_LCD_SetLayer1Opacity(255);
+	// TM_LCD_SetLayer2Opacity(0);
 	
 	/* Return OK */
 	return TM_LCD_Result_Ok;
