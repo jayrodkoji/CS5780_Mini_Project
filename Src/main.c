@@ -92,17 +92,20 @@ int main(void)
   TM_LCD_Init();
   LTDC->GCR &= ~LTDC_GCR_LTDCEN;
 
-  LTDC_Layer1->WHPCR = 0 << LTDC_LxWHPCR_WHSPPOS_Pos | 0 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
-  LTDC_Layer1->WVPCR = 0 << LTDC_LxWVPCR_WVSPPOS_Pos | 0 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
-  // LTDC_Layer1->WHPCR = 240 << LTDC_LxWHPCR_WHSPPOS_Pos | 0 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
-  // LTDC_Layer1->WVPCR = 183 << LTDC_LxWVPCR_WVSPPOS_Pos | 0 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
+  LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos;
+
+  LTDC_Layer1->WHPCR = 110 << LTDC_LxWHPCR_WHSPPOS_Pos | 100 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
+  LTDC_Layer1->WVPCR = 110 << LTDC_LxWVPCR_WVSPPOS_Pos | 100 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
   LTDC_Layer1->PFCR = 0x01;   // RGB888 pixel format
-  LTDC_Layer1->DCCR = 0xFF << LTDC_LxDCCR_DCALPHA_Pos | 0xFF << LTDC_LxDCCR_DCRED_Pos | 0xFF << LTDC_LxDCCR_DCBLUE_Pos;          // layer default color
-  // LTDC_Layer1->CFBAR = (uint8_t)image_data_Image;                                                           // frame buffer start address
-  // LTDC_Layer1->CFBLR = 240 * 3 << LTDC_LxCFBLR_CFBP_Pos | 240 * 3 + 3 << LTDC_LxCFBLR_CFBLL_Pos;  // frame buffer line length and pitch
-  // LTDC_Layer1->CFBLNR = 320;                                                                      // frame buffer line number
   LTDC_Layer1->CACR = 255;                                                                        // constant alpha
   LTDC_Layer1->CR |= LTDC_LxCR_LEN;                                                               // enable layer1
+
+  LTDC_Layer2->WHPCR = 150 << LTDC_LxWHPCR_WHSPPOS_Pos | 140 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
+  LTDC_Layer2->WVPCR = 150 << LTDC_LxWVPCR_WVSPPOS_Pos | 140 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
+  LTDC_Layer2->PFCR = 0x01;   // RGB888 pixel format
+  LTDC_Layer2->CACR = 255;                                                                        // constant alpha
+  LTDC_Layer2->CR |= LTDC_LxCR_LEN;                                                               // enable layer1
+
 
   LTDC->SRCR = LTDC_SRCR_IMR;                                                                     // immediate shadow registers reload 
 
@@ -146,6 +149,11 @@ int main(void)
   println("Hi there");
   while (1)
   {
+    
+    HAL_Delay(1000);
+    LTDC_Layer1->WHPCR = 110 << LTDC_LxWHPCR_WHSPPOS_Pos | 100 << LTDC_LxWHPCR_WHSTPOS_Pos;          // window horizontal start/stop positions
+    LTDC_Layer1->WVPCR = 210 << LTDC_LxWVPCR_WVSPPOS_Pos | 200 << LTDC_LxWVPCR_WVSTPOS_Pos;           // window vertical start/stop positions
+    LTDC->SRCR = LTDC_SRCR_IMR;                                                                     // immediate shadow registers reload 
     /* USER CODE END WHILE */
   //  HAL_Delay(100);
   //  get_XY_data(&X_data, &Y_data);
