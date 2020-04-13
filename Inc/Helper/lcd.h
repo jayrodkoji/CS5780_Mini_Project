@@ -3,8 +3,6 @@
 
 void init_LCD();
 
-void init_LTDC();
-
 void draw_rectangle(LTDC_Layer_TypeDef* p_layer,
                     const uint32_t x_start,
                     const uint32_t x_end,

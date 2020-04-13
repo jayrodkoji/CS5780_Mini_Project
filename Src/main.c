@@ -29,8 +29,6 @@
 #include "Helper/led.h"
 #include "Helper/spi.h"
 #include "Helper/usart.h"
-#include "Image.h"
-
 
 /* USER CODE END Includes */
 

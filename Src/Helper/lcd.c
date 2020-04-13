@@ -132,7 +132,6 @@ void send_spi5(uint8_t data)
 void ILI9341_SendCommand(uint8_t data) {
   WRX_RESET;
   CS_RESET;
-  // TM_SPI_Send(SPI5, data);
   send_spi5(data);
   CS_SET;
 }
@@ -140,7 +139,6 @@ void ILI9341_SendCommand(uint8_t data) {
 void ILI9341_SendData(uint8_t data) {
   WRX_SET;
   CS_RESET;
-  // TM_SPI_Send(SPI5, data);
   send_spi5(data);
   CS_SET;
 }
