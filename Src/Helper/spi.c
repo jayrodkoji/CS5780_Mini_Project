@@ -4,11 +4,11 @@
 
 void init_SPI5()
 {
-  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN; // Enable GPIOC clock
-
-  // Setup PC1 to be an input
-  // Physically connect PF6(NSS) to PC1 on the board.
-  GPIOC->MODER &= ~GPIO_MODER_MODE1_Msk;
+  // Return early if already enabled
+  if ((SPI5->CR1 & SPI_CR1_SPE_Msk) != 0)
+  {
+    return;
+  }
 
   RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN; // Enable GPIOF clock
 
@@ -35,4 +35,13 @@ void init_SPI5()
   SPI5->CR1 |= SPI_CR1_SSM; // Software slave mode
   SPI5->CR1 |= SPI_CR1_MSTR; // Master mode
   SPI5->CR1 |= SPI_CR1_SPE; // Enable
+}
+
+uint8_t write_SPI5(uint8_t data)
+{
+  while ((SPI5->SR & SPI_SR_TXE) == 0 || (SPI5->SR & SPI_SR_BSY));
+  SPI5->DR = data; // Write data
+  while ((SPI5->SR & SPI_SR_RXNE) == 0 || (SPI5->SR & SPI_SR_BSY));
+
+  return SPI5->DR; // Read data
 }

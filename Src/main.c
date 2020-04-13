@@ -113,18 +113,13 @@ int main(void)
   // Initialize USART1 (ST-Link)
   init_USART1();
 
-  // Initialize SPI5 (gyroscope)
-  // init_SPI5();
-
-  // if (L3GD20_ID_match())
-  // {
-  //   set_green_LED(1);
-  // }
-  // set_red_LED(1);
+  if (L3GD20_ID_match())
+  {
+    set_green_LED(1);
+  }
   update_red_LED_timer(500);
-  update_green_LED_timer(500);
 
-  // init_L3GD20();
+  init_L3GD20();
 
 
   /* USER CODE END 2 */
@@ -139,27 +134,24 @@ int main(void)
   println("Hi there");
   while (1)
   {
-    
-    HAL_Delay(1000);
-    draw_rectangle(LTDC_Layer1, 100, 110, 200, 210);
     /* USER CODE END WHILE */
-  //  HAL_Delay(100);
-  //  get_XY_data(&X_data, &Y_data);
-  //  X_pos += X_data;
-  //  Y_pos += Y_data;
+    HAL_Delay(100);
+    get_XY_data(&X_data, &Y_data);
+    X_pos += X_data;
+    Y_pos += Y_data;
 
-  //  print("X_data: ");
-  //  itoa(X_data/1000, message, 10);
-  //  print(message);
-  //  print(", Y_data: ");
-  //  itoa(Y_data/1000, message, 10);
-  //  print(message);
-  //  print(", X_pos: ");
-  //  itoa(X_pos/1000, message, 10);
-  //  print(message);
-  //  print(", Y_pos: ");
-  //  itoa(Y_pos/1000, message, 10);
-  //  println(message);
+    print("X_data: ");
+    itoa(X_data, message, 10);
+    print(message);
+    print(", Y_data: ");
+    itoa(Y_data, message, 10);
+    print(message);
+    print(", X_pos: ");
+    itoa(X_pos, message, 10);
+    print(message);
+    print(", Y_pos: ");
+    itoa(Y_pos, message, 10);
+    println(message);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -199,7 +191,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 

@@ -87,12 +87,8 @@ void init_LCD_GPIOs()
   // Initialize GPIO for WRX and CS pins
   GPIOD->MODER |= GPIO_MODER_MODE13_0;
   GPIOD->OSPEEDR |= GPIO_OSPEEDR_OSPEED13_0;
-  GPIOD->OTYPER &= ~GPIO_OTYPER_OT13;
-  GPIOD->PUPDR &= ~GPIO_PUPDR_PUPD13_Msk;
   GPIOC->MODER |= GPIO_MODER_MODE2_0;
   GPIOC->OSPEEDR |= GPIO_OSPEEDR_OSPEED2_0;
-  GPIOC->OTYPER &= ~GPIO_OTYPER_OT2;
-  GPIOC->PUPDR &= ~GPIO_PUPDR_PUPD2_Msk;
 }
 
 void init_LTDC()
@@ -122,24 +118,17 @@ void init_LTDC()
   LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos; // RED
 }
 
-void send_spi5(uint8_t data)
-{
-  while ((SPI5->SR & SPI_SR_TXE) == 0 || (SPI5->SR & SPI_SR_BSY));
-  SPI5->DR = data; // Write data
-  while ((SPI5->SR & SPI_SR_RXNE) == 0 || (SPI5->SR & SPI_SR_BSY));
-}
-
 void ILI9341_SendCommand(uint8_t data) {
   WRX_RESET;
   CS_RESET;
-  send_spi5(data);
+  write_SPI5(data);
   CS_SET;
 }
 
 void ILI9341_SendData(uint8_t data) {
   WRX_SET;
   CS_RESET;
-  send_spi5(data);
+  write_SPI5(data);
   CS_SET;
 }
 
@@ -153,7 +142,7 @@ void power_up_LCD()
   CS_SET;
   
   /* Init SPI */
-  // init_SPI5();
+  init_SPI5();
   
   /* Initialization sequence */
   ILI9341_SendCommand(0xCA);
