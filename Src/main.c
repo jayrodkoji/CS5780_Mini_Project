@@ -134,66 +134,83 @@ int main(void)
   int16_t Y_data;
   int64_t X_pos = 0;
   int64_t Y_pos = 0;
-  int64_t X_speed = 0;
-  int64_t Y_speed = 0;
+  int16_t X_speed = 0;
+  int16_t Y_speed = 0;
+  int16_t direction = 0;
+
   char message[10];
   uint32_t rand;
   while (1) {
       /* USER CODE END WHILE */
-      HAL_Delay(1000);
+      HAL_Delay(100);
+
       get_XY_data(&X_data, &Y_data);
+
       if (X_data >= 30000) {
-          if (X_speed <= 5)
-              X_speed += 5;
-          else
-              X_speed = 10;
+              direction = 1;
+      } else if (X_data <= -30000) {
+              direction = -1;
       }
-      else if (X_data >= 20000) {
-         if (X_speed <= 7)
-              X_speed += 3;
-        else
-              X_speed = 10;
+
+     if((X_speed >= 0 && X_speed <= 5) || (X_speed <= 0 && X_speed >= -5))
+        if(X_speed == 5){
+            if(direction == -1)
+                X_speed += direction;
+
         }
-      else if(X_data >= 10000) {
-          if (X_speed <= 9)
-              X_speed += 1;
-          else
-              X_speed = 10;
-      }
-      else if(X_data <= -30000) {
-          if (X_speed >= -5)
-              X_speed -= 5;
-          else
-              X_speed = -10;
-      }
-      else if(X_data <= -20000) {
-          if (X_speed >= -7)
-              X_speed -= 3;
-          else
-              X_speed = -10;
-      }
-      else if(X_data <= -10000) {
-          if (X_speed >= -9)
-              X_speed -= 1;
-          else
-              X_speed = -10;
+     else if (X_speed == -5) {
+        if (direction == 1)
+            X_speed += direction;
+     }
+     else
+         X_speed += direction;
+
+      if (Y_data >= 30000) {
+          direction = 1;
+      } else if (Y_data <= -30000) {
+          direction = -1;
       }
 
-    X_pos += X_data/10;
-    Y_pos += Y_data/10;
+      if((Y_speed >= 0 && X_speed <= 5) || (Y_speed <= 0 && X_speed >= -5))
+          if(Y_speed == 5){
+              if(direction == -1)
+                  Y_speed += direction;
 
-    print("X_speed: ");
-    itoa(X_speed, message, 10);
-    print(message);
-    print(", Y_data: ");
-    itoa(Y_data, message, 10);
-    print(message);
-    print(", X_pos: ");
-    itoa(X_pos, message, 10);
-    print(message);
-    print(", Y_pos: ");
-    itoa(Y_pos, message, 10);
-    println(message);
+          }
+          else if (Y_speed == -5) {
+              if (direction == 1)
+                  Y_speed += direction;
+          }
+          else
+              Y_speed += direction;
+
+      ball_x = ball_x + X_speed;
+      ball_y = ball_y + Y_speed;
+      display_ball(current_ball, ball_x, ball_y);
+      X_pos += X_data / 10;
+      Y_pos += Y_data / 10;
+
+      if(X_data >= 30000 || X_data <= -30000) {
+          print("Direction: ");
+          itoa(direction, message, 10);
+          print(message);
+          print(", X_speed: ");
+          itoa(X_speed, message, 10);
+          print(message);
+          print(", X_data: ");
+          itoa(X_data, message, 10);
+          print(message);
+          print(", Y_data: ");
+          itoa(Y_data, message, 10);
+          print(message);
+          print(", X_pos: ");
+          itoa(X_pos, message, 10);
+          print(message);
+          print(", Y_pos: ");
+          itoa(Y_pos, message, 10);
+          println(message);
+      }
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -46,7 +46,6 @@ void init_L3GD20()
   CS_SET;
 
   write_L3GD20_register(0x20, 0xB); // Enable X and Y axis at 95 Hz
-  write_L3GD20_register(0x23, 0x00);
 }
 
 void get_XY_data(int16_t* X_data, int16_t* Y_data)

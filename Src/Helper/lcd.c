@@ -313,16 +313,16 @@ void center_output(LTDC_Layer_TypeDef* p_layer, tImage* p_image, const uint8_t c
 
 void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, tImage* p_image, const uint8_t cfblr_offset)
 {
-    uint32_t max_x = LCD_WIDTH - p_image->width;
-    uint32_t max_y = LCD_HEIGHT - p_image->width;
+    uint32_t max_y = LCD_WIDTH - p_image->width;
+    uint32_t max_x = LCD_HEIGHT - p_image->width;
 
-    x = x % max_x;
     y = y % max_y;
+    x = x % max_x;
 
-    p_layer->WHPCR = (x + HSYNC + HBP + p_image->width) << LTDC_LxWHPCR_WHSPPOS_Pos |
-                     (x + HSYNC + HBP) << LTDC_LxWHPCR_WHSTPOS_Pos;
-    p_layer->WVPCR = (y + VSYNC + VBP + p_image->height) << LTDC_LxWVPCR_WVSPPOS_Pos |
-                     (y + VSYNC + VBP) << LTDC_LxWVPCR_WVSTPOS_Pos;
+    p_layer->WHPCR = (y + HSYNC + HBP + p_image->width) << LTDC_LxWHPCR_WHSPPOS_Pos |
+                     (y + HSYNC + HBP) << LTDC_LxWHPCR_WHSTPOS_Pos;
+    p_layer->WVPCR = (x + VSYNC + VBP + p_image->height) << LTDC_LxWVPCR_WVSPPOS_Pos |
+                     (x + VSYNC + VBP) << LTDC_LxWVPCR_WVSTPOS_Pos;
 
     p_layer->CFBAR = (uint32_t)p_image->data;
     p_layer->CFBLR = p_image->width*4 << LTDC_LxCFBLR_CFBP_Pos | (p_image->width*4 + cfblr_offset) << LTDC_LxCFBLR_CFBLL_Pos;
