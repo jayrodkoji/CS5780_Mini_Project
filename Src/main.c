@@ -126,25 +126,25 @@ int main(void)
   char message[10];
   while (1)
   {
-    // /* USER CODE END WHILE */
-    // HAL_Delay(100);
-    // get_XY_data(&X_data, &Y_data);
-    // X_pos += X_data;
-    // Y_pos += Y_data;
+    /* USER CODE END WHILE */
+    HAL_Delay(100);
+    get_XY_data(&X_data, &Y_data);
+    X_pos += X_data/10;
+    Y_pos += Y_data/10;
 
-    // print("X_data: ");
-    // itoa(X_data, message, 10);
-    // print(message);
-    // print(", Y_data: ");
-    // itoa(Y_data, message, 10);
-    // print(message);
-    // print(", X_pos: ");
-    // itoa(X_pos, message, 10);
-    // print(message);
-    // print(", Y_pos: ");
-    // itoa(Y_pos, message, 10);
-    // println(message);
-    // /* USER CODE BEGIN 3 */
+    print("X_data: ");
+    itoa(X_data, message, 10);
+    print(message);
+    print(", Y_data: ");
+    itoa(Y_data, message, 10);
+    print(message);
+    print(", X_pos: ");
+    itoa(X_pos, message, 10);
+    print(message);
+    print(", Y_pos: ");
+    itoa(Y_pos, message, 10);
+    println(message);
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }

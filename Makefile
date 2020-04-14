@@ -40,6 +40,7 @@ Src/main.c \
 Src/Helper/l3gd20.c \
 Src/Helper/lcd.c \
 Src/Helper/led.c \
+Src/Helper/rng.c \
 Src/Helper/spi.c \
 Src/Helper/usart.c\
 Src/stm32f4xx_it.c \
