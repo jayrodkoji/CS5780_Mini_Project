@@ -137,7 +137,7 @@ int main(void)
   int16_t X_speed = 0;
   int16_t Y_speed = 0;
   int16_t direction = 0;
-
+  int max_speed = 5;
   char message[10];
   uint32_t rand;
   while (1) {
@@ -152,32 +152,32 @@ int main(void)
               direction = -1;
       }
 
-     if((X_speed >= 0 && X_speed <= 5) || (X_speed <= 0 && X_speed >= -5))
-        if(X_speed == 5){
+     if((X_speed >= 0 && X_speed <= max_speed) || (X_speed <= 0 && X_speed >= -max_speed))
+        if(X_speed == max_speed){
             if(direction == -1)
                 X_speed += direction;
 
         }
-     else if (X_speed == -5) {
+     else if (X_speed == -max_speed) {
         if (direction == 1)
             X_speed += direction;
      }
      else
          X_speed += direction;
 
-      if (Y_data >= 30000) {
+      if (Y_data >= 20000) {
           direction = 1;
-      } else if (Y_data <= -30000) {
+      } else if (Y_data <= -20000) {
           direction = -1;
       }
 
-      if((Y_speed >= 0 && X_speed <= 5) || (Y_speed <= 0 && X_speed >= -5))
-          if(Y_speed == 5){
+      if((Y_speed >= 0 && Y_speed <= max_speed) || (Y_speed <= 0 && X_speed >= -max_speed))
+          if(Y_speed == max_speed){
               if(direction == -1)
                   Y_speed += direction;
 
           }
-          else if (Y_speed == -5) {
+          else if (Y_speed == -max_speed) {
               if (direction == 1)
                   Y_speed += direction;
           }
@@ -190,7 +190,7 @@ int main(void)
       X_pos += X_data / 10;
       Y_pos += Y_data / 10;
 
-      if(X_data >= 30000 || X_data <= -30000) {
+      if(X_data >= 20000 || X_data <= -20000) {
           print("Direction: ");
           itoa(direction, message, 10);
           print(message);
@@ -199,6 +199,9 @@ int main(void)
           print(message);
           print(", X_data: ");
           itoa(X_data, message, 10);
+          print(message);
+          print(", Y_speed: ");
+          itoa(Y_speed, message, 10);
           print(message);
           print(", Y_data: ");
           itoa(Y_data, message, 10);
