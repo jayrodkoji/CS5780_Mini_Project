@@ -29,6 +29,7 @@
 #include "Helper/led.h"
 #include "Helper/spi.h"
 #include "Helper/usart.h"
+#include "Helper/rng.h"
 
 /* USER CODE END Includes */
 
@@ -91,10 +92,20 @@ int main(void)
 
   init_LCD();
   init_LTDC();
+  init_RNG();
 
-  startup_sequence();
-  // draw_rectangle(LTDC_Layer1, 100, 110, 100, 110);
-  // draw_rectangle(LTDC_Layer2, 200, 210, 200, 210);
+  uint32_t first_random_number = get_random_number(); // not used but for comparison.
+
+  //startup_sequence();
+
+  uint16_t current_ball = 0;
+  uint32_t target_x = get_random_number();
+  uint32_t target_y = get_random_number();
+  uint32_t ball_x = get_random_number();
+  uint32_t ball_y = get_random_number();
+  display_target(target_x, target_y);
+  display_ball(current_ball, ball_x, ball_y);
+  HAL_Delay(1000);
 
 
   /* USER CODE END SysInit */
@@ -123,17 +134,56 @@ int main(void)
   int16_t Y_data;
   int64_t X_pos = 0;
   int64_t Y_pos = 0;
+  int64_t X_speed = 0;
+  int64_t Y_speed = 0;
   char message[10];
-  while (1)
-  {
-    /* USER CODE END WHILE */
-    HAL_Delay(100);
-    get_XY_data(&X_data, &Y_data);
+  uint32_t rand;
+  while (1) {
+      /* USER CODE END WHILE */
+      HAL_Delay(1000);
+      get_XY_data(&X_data, &Y_data);
+      if (X_data >= 30000) {
+          if (X_speed <= 5)
+              X_speed += 5;
+          else
+              X_speed = 10;
+      }
+      else if (X_data >= 20000) {
+         if (X_speed <= 7)
+              X_speed += 3;
+        else
+              X_speed = 10;
+        }
+      else if(X_data >= 10000) {
+          if (X_speed <= 9)
+              X_speed += 1;
+          else
+              X_speed = 10;
+      }
+      else if(X_data <= -30000) {
+          if (X_speed >= -5)
+              X_speed -= 5;
+          else
+              X_speed = -10;
+      }
+      else if(X_data <= -20000) {
+          if (X_speed >= -7)
+              X_speed -= 3;
+          else
+              X_speed = -10;
+      }
+      else if(X_data <= -10000) {
+          if (X_speed >= -9)
+              X_speed -= 1;
+          else
+              X_speed = -10;
+      }
+
     X_pos += X_data/10;
     Y_pos += Y_data/10;
 
-    print("X_data: ");
-    itoa(X_data, message, 10);
+    print("X_speed: ");
+    itoa(X_speed, message, 10);
     print(message);
     print(", Y_data: ");
     itoa(Y_data, message, 10);
@@ -168,11 +218,11 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 10;
   RCC_OscInitStruct.PLL.PLLN = 80;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -192,8 +242,8 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = 50;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = 2;
+  PeriphClkInitStruct.PLLSAI.PLLSAIN = 60;
+  PeriphClkInitStruct.PLLSAI.PLLSAIR = 5;
   PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
