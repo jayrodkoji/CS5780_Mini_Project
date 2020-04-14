@@ -92,16 +92,9 @@ int main(void)
   init_LCD();
   init_LTDC();
 
-  LTDC->GCR &= ~LTDC_GCR_LTDCEN;
-
-  LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos;
-
-  LTDC->SRCR = LTDC_SRCR_IMR;                                                                     // immediate shadow registers reload 
-
-  LTDC->GCR |= LTDC_GCR_LTDCEN;
-
-  draw_rectangle(LTDC_Layer1, 100, 110, 100, 110);
-  draw_rectangle(LTDC_Layer2, 200, 210, 200, 210);
+  startup_sequence();
+  // draw_rectangle(LTDC_Layer1, 100, 110, 100, 110);
+  // draw_rectangle(LTDC_Layer2, 200, 210, 200, 210);
 
 
   /* USER CODE END SysInit */
@@ -131,28 +124,27 @@ int main(void)
   int64_t X_pos = 0;
   int64_t Y_pos = 0;
   char message[10];
-  println("Hi there");
   while (1)
   {
-    /* USER CODE END WHILE */
-    HAL_Delay(100);
-    get_XY_data(&X_data, &Y_data);
-    X_pos += X_data;
-    Y_pos += Y_data;
+    // /* USER CODE END WHILE */
+    // HAL_Delay(100);
+    // get_XY_data(&X_data, &Y_data);
+    // X_pos += X_data;
+    // Y_pos += Y_data;
 
-    print("X_data: ");
-    itoa(X_data, message, 10);
-    print(message);
-    print(", Y_data: ");
-    itoa(Y_data, message, 10);
-    print(message);
-    print(", X_pos: ");
-    itoa(X_pos, message, 10);
-    print(message);
-    print(", Y_pos: ");
-    itoa(Y_pos, message, 10);
-    println(message);
-    /* USER CODE BEGIN 3 */
+    // print("X_data: ");
+    // itoa(X_data, message, 10);
+    // print(message);
+    // print(", Y_data: ");
+    // itoa(Y_data, message, 10);
+    // print(message);
+    // print(", X_pos: ");
+    // itoa(X_pos, message, 10);
+    // print(message);
+    // print(", Y_pos: ");
+    // itoa(Y_pos, message, 10);
+    // println(message);
+    // /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -200,9 +192,9 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = 60;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = 7;
-  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_16;
+  PeriphClkInitStruct.PLLSAI.PLLSAIN = 50;
+  PeriphClkInitStruct.PLLSAI.PLLSAIR = 2;
+  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();

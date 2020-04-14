@@ -1,6 +1,25 @@
 #include "stm32f429xx.h"
 #include "Helper/lcd.h"
 #include "Helper/spi.h"
+#include "The Game Will Begin In.h"
+#include "3.h"
+#include "2.h"
+#include "1.h"
+
+
+// LCD Constants
+const uint16_t LCD_WIDTH = 240;
+const uint16_t LCD_HEIGHT = 320;
+const uint16_t HFP = 10;
+const uint16_t HSYNC = 10;
+const uint16_t HBP = 20;
+const uint16_t VFP = 4;
+const uint16_t VSYNC = 2;
+const uint16_t VBP = 2;
+const uint16_t ACTIVE_W = 10 + 20 + 240 - 1; // HSYNC + HBP + LCD_WIDTH - 1;
+const uint16_t ACTIVE_H = 2 + 2 + 320 - 1; // VSYNC + VBP + LCD_HEIGHT - 1;
+const uint16_t TOTAL_W = 10 + 20 + 240 + 10 - 1; // HSYNC + HBP + LCD_WIDTH + HFP - 1;
+const uint16_t TOTAL_H = 2 + 2 + 320 + 4 - 1; // VSYNC + VBP + LCD_HEIGHT + VFP - 1;
 
 // Commands
 #define ILI9341_RESET         0x01
@@ -93,29 +112,17 @@ void init_LCD_GPIOs()
 
 void init_LTDC()
 {
-    RCC->APB2ENR |= RCC_APB2ENR_LTDCEN;
-  // LCD constants
-  const uint16_t LCD_WIDTH = 240;
-  const uint16_t LCD_HEIGHT = 320;
-
-  const uint16_t HFP = 10;
-  const uint16_t HSYNC = 10;
-  const uint16_t HBP = 20; // was 10 but seemed wrong per datasheet
-
-  const uint16_t VFP = 4;
-  const uint16_t VSYNC = 2;
-  const uint16_t VBP = 2;
-
-  const uint16_t ACTIVE_W = HSYNC + HBP + LCD_WIDTH - 1;
-  const uint16_t ACTIVE_H = VSYNC + VBP + LCD_HEIGHT - 1;
-  const uint16_t TOTAL_W = HSYNC + HBP + LCD_WIDTH + HFP - 1;
-  const uint16_t TOTAL_H = VSYNC + VBP + LCD_HEIGHT + VFP - 1;
+  RCC->APB2ENR |= RCC_APB2ENR_LTDCEN;
 
   LTDC->SSCR = ((HSYNC - 1) << 16) | (VSYNC - 1);
   LTDC->BPCR = ((HBP - 1) << 16) | (VBP - 1);
   LTDC->AWCR = (ACTIVE_W << 16) | ACTIVE_H;
   LTDC->TWCR = (TOTAL_W << 16) | TOTAL_H;
-  LTDC->BCCR = 0xFF << LTDC_BCCR_BCRED_Pos; // RED
+  LTDC->BCCR = 0xFFFFFF;
+
+  LTDC->SRCR |= LTDC_SRCR_IMR;
+
+  LTDC->GCR |= LTDC_GCR_LTDCEN;
 }
 
 void ILI9341_SendCommand(uint8_t data) {
@@ -294,4 +301,32 @@ void draw_rectangle(LTDC_Layer_TypeDef* p_layer,
   p_layer->CR |= LTDC_LxCR_LEN; // enable layer
 
   LTDC->SRCR = LTDC_SRCR_IMR;
+}
+
+void center_output(LTDC_Layer_TypeDef* p_layer, tImage* p_image, const uint8_t cfblr_offset)
+{
+  p_layer->WHPCR = (TOTAL_W/2 + p_image->width/2) << LTDC_LxWHPCR_WHSPPOS_Pos |
+                   (TOTAL_W/2 - p_image->width/2) << LTDC_LxWHPCR_WHSTPOS_Pos;
+  p_layer->WVPCR = (TOTAL_H/2 + p_image->height/2) << LTDC_LxWVPCR_WVSPPOS_Pos |
+                   (TOTAL_H/2 - p_image->height/2) << LTDC_LxWVPCR_WVSTPOS_Pos;
+
+  p_layer->CFBAR = (uint32_t)p_image->data;
+  p_layer->CFBLR = p_image->width*4 << LTDC_LxCFBLR_CFBP_Pos | (p_image->width*4 + cfblr_offset) << LTDC_LxCFBLR_CFBLL_Pos;
+  p_layer->CFBLNR = p_image->height;
+  p_layer->PFCR = 0x0; // ARGB8888
+  p_layer->CACR = 255; // constant alpha
+  p_layer->CR |= LTDC_LxCR_LEN; // enable layer
+  LTDC->SRCR = LTDC_SRCR_VBR;
+}
+
+void startup_sequence()
+{
+  center_output(LTDC_Layer1, &TheGameWillBeginIn, 4);
+  HAL_Delay(1000);
+  center_output(LTDC_Layer1, &image_3, 3);
+  HAL_Delay(1000);
+  center_output(LTDC_Layer1, &image_2, 4);
+  HAL_Delay(1000);
+  center_output(LTDC_Layer1, &image_1, 3);
+  HAL_Delay(1000);
 }
