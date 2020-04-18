@@ -9,6 +9,7 @@
 #include "red_ball.h"
 #include "green_ball.h"
 #include "YOU WIN.h"
+#include "target_black.h"
 
 
 // LCD Constants
@@ -346,7 +347,7 @@ void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, tImage* p
 }
 
 void display_target(uint32_t x, uint32_t y){
-    output_image(LTDC_Layer1, x, y, &target, 4);
+    output_image(LTDC_Layer1, x, y, &target_black, 4);
 }
 
 void display_ball(uint16_t ball, uint32_t x, uint32_t y){

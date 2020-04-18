@@ -89,15 +89,15 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   init_SPI5();
-
   init_LCD();
   init_LTDC();
   init_RNG();
 
-  uint32_t first_random_number = get_random_number(); // not used but for comparison.
+  uint32_t first_random_number = get_random_number(); // Throw away number. See RNG documentation
 
   startup_sequence();
 
+  // initialized ball and target
   uint16_t current_ball = 0;
   uint32_t target_x = get_random_number();
   uint32_t target_y = get_random_number();
@@ -105,7 +105,6 @@ int main(void)
   uint32_t ball_y = get_random_number();
   display_target(target_x, target_y);
   display_ball(current_ball, ball_x, ball_y);
-
 
   /* USER CODE END SysInit */
 
@@ -123,23 +122,16 @@ int main(void)
   update_green_LED_timer(green_timer);
 
   init_L3GD20();
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int16_t X_data;
-  int16_t Y_data;
-  int64_t X_pos = 0;
-  int64_t Y_pos = 0;
+  int16_t X_data, Y_data;
   int16_t X_speed = 0;
   int16_t Y_speed = 0;
-  int16_t direction = 0;
-  int max_speed = 20;
-  char message[10];
-  uint32_t rand;
-  uint16_t i = 0;
+  uint16_t max_speed = 20;
   uint8_t level = 0;
+
   while (1) {
     if (level <= 10)
     {
@@ -148,11 +140,13 @@ int main(void)
 
       get_XY_data(&X_data, &Y_data);
 
+      // update speed when x/y value is large/small enough
       X_speed += X_data > 2000 ? 1 : 0;
       X_speed -= X_data < -2000 ? 1 : 0;
       Y_speed += Y_data > 2000 ? 1 : 0;
       Y_speed -= Y_data < -2000 ? 1 : 0;
 
+      // verify speed doesn't exceed max speed
       X_speed = X_speed > max_speed ? max_speed : X_speed;
       X_speed = X_speed < -max_speed ? -max_speed : X_speed;
       Y_speed = Y_speed > max_speed ? max_speed : Y_speed;
@@ -160,10 +154,11 @@ int main(void)
 
       ball_x = ball_x + X_speed / 10;
       ball_y = ball_y + Y_speed / 10;
+
       display_ball(current_ball, ball_x, ball_y);
-      X_pos += X_data / 10;
-      Y_pos += Y_data / 10;
-      
+
+      // Detect if ball hits target updating game level as appropriate
+      // Each level increases led blink frequency.
       if ((abs(ball_x%290 - target_x%290) < 30) && (abs(ball_y%210 - target_y%210) < 30))
       {
         level++;
@@ -215,6 +210,8 @@ int main(void)
           update_green_LED_timer(0);
           set_green_LED(1);
         }
+
+        // move target
         target_x = get_random_number();
         target_y = get_random_number();
         display_target(target_x, target_y);
