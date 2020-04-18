@@ -17,11 +17,13 @@ void TIM3_IRQHandler(void)
 void update_red_LED_timer(const uint16_t time_ms)
 {
   TIM2->ARR = time_ms;
+  TIM2->CNT=1;
 }
 
 void update_green_LED_timer(const uint16_t time_ms)
 {
   TIM3->ARR = time_ms;
+  TIM3->CNT = 1;
 }
 
 void init_LEDs()

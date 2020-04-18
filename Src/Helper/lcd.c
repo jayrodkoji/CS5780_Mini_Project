@@ -8,21 +8,22 @@
 #include "target.h"
 #include "red_ball.h"
 #include "green_ball.h"
+#include "YOU WIN.h"
 
 
 // LCD Constants
 const uint16_t LCD_WIDTH = 240;
 const uint16_t LCD_HEIGHT = 320;
 const uint16_t HFP = 10;
-const uint16_t HSYNC = 2;
-const uint16_t HBP = 2;
+const uint16_t HSYNC = 10;
+const uint16_t HBP = 20;
 const uint16_t VFP = 4;
 const uint16_t VSYNC = 2;
 const uint16_t VBP = 2;
-const uint16_t ACTIVE_W = HSYNC + HBP + LCD_WIDTH - 1; // HSYNC + HBP + LCD_WIDTH - 1;
-const uint16_t ACTIVE_H = VSYNC + VBP + LCD_HEIGHT - 1; // VSYNC + VBP + LCD_HEIGHT - 1;
-const uint16_t TOTAL_W = HSYNC + HBP + LCD_WIDTH + HFP - 1; // HSYNC + HBP + LCD_WIDTH + HFP - 1;
-const uint16_t TOTAL_H = VSYNC + VBP + LCD_HEIGHT + VFP - 1; // VSYNC + VBP + LCD_HEIGHT + VFP - 1;
+const uint16_t ACTIVE_W = 10 + 20 + 240 - 1; // HSYNC + HBP + LCD_WIDTH - 1;
+const uint16_t ACTIVE_H = 2 + 2 + 320 - 1; // VSYNC + VBP + LCD_HEIGHT - 1;
+const uint16_t TOTAL_W = 10 + 20 + 240 + 10 - 1; // HSYNC + HBP + LCD_WIDTH + HFP - 1;
+const uint16_t TOTAL_H = 2 + 2 + 320 + 4 - 1; // VSYNC + VBP + LCD_HEIGHT + VFP - 1;
 
 // Commands
 #define ILI9341_RESET         0x01
@@ -308,7 +309,18 @@ void draw_rectangle(LTDC_Layer_TypeDef* p_layer,
 
 void center_output(LTDC_Layer_TypeDef* p_layer, tImage* p_image, const uint8_t cfblr_offset)
 {
-    output_image(LTDC_Layer1, ACTIVE_W/2 - p_image->width/2, ACTIVE_H/2 - p_image->height/2, p_image, cfblr_offset);
+  p_layer->WHPCR = (TOTAL_W/2 + p_image->width/2) << LTDC_LxWHPCR_WHSPPOS_Pos |
+                   (TOTAL_W/2 - p_image->width/2) << LTDC_LxWHPCR_WHSTPOS_Pos;
+  p_layer->WVPCR = (TOTAL_H/2 + p_image->height/2) << LTDC_LxWVPCR_WVSPPOS_Pos |
+                   (TOTAL_H/2 - p_image->height/2) << LTDC_LxWVPCR_WVSTPOS_Pos;
+
+  p_layer->CFBAR = (uint32_t)p_image->data;
+  p_layer->CFBLR = p_image->width*4 << LTDC_LxCFBLR_CFBP_Pos | (p_image->width*4 + cfblr_offset) << LTDC_LxCFBLR_CFBLL_Pos;
+  p_layer->CFBLNR = p_image->height;
+  p_layer->PFCR = 0x0; // ARGB8888
+  p_layer->CACR = 255; // constant alpha
+  p_layer->CR |= LTDC_LxCR_LEN; // enable layer
+  LTDC->SRCR = LTDC_SRCR_VBR;
 }
 
 void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, tImage* p_image, const uint8_t cfblr_offset)
@@ -353,14 +365,23 @@ void_move_ball(uint16_t ball){
         output_image(LTDC_Layer2, x, y, &red_ball2, 4);
 }
 
+void display_win_screen()
+{
+  LTDC_Layer1->WHPCR = 0;
+  LTDC_Layer1->WVPCR = 0;
+  LTDC_Layer1->CR &= ~LTDC_LxCR_LEN;
+  LTDC_Layer2->CR &= ~LTDC_LxCR_LEN;
+  center_output(LTDC_Layer2, &YOUWIN, 4);
+}
+
 void startup_sequence()
 {
   center_output(LTDC_Layer1, &TheGameWillBeginIn, 4);
   HAL_Delay(1000);
-  center_output(LTDC_Layer1, &image_3, 4);
+  center_output(LTDC_Layer1, &image_3, 3);
   HAL_Delay(1000);
   center_output(LTDC_Layer1, &image_2, 4);
   HAL_Delay(1000);
-  center_output(LTDC_Layer1, &image_1, 4);
+  center_output(LTDC_Layer1, &image_1, 3);
   HAL_Delay(1000);
 }

@@ -96,7 +96,7 @@ int main(void)
 
   uint32_t first_random_number = get_random_number(); // not used but for comparison.
 
-  //startup_sequence();
+  startup_sequence();
 
   uint16_t current_ball = 0;
   uint32_t target_x = get_random_number();
@@ -105,7 +105,6 @@ int main(void)
   uint32_t ball_y = get_random_number();
   display_target(target_x, target_y);
   display_ball(current_ball, ball_x, ball_y);
-  HAL_Delay(1000);
 
 
   /* USER CODE END SysInit */
@@ -117,14 +116,13 @@ int main(void)
   // Initialize USART1 (ST-Link)
   init_USART1();
 
-  if (L3GD20_ID_match())
-  {
-    set_green_LED(1);
-  }
-  update_red_LED_timer(500);
+  uint16_t red_timer = 0;
+  uint16_t green_timer = 0;
+
+  update_red_LED_timer(red_timer);
+  update_green_LED_timer(green_timer);
 
   init_L3GD20();
-
 
   /* USER CODE END 2 */
 
@@ -137,82 +135,97 @@ int main(void)
   int16_t X_speed = 0;
   int16_t Y_speed = 0;
   int16_t direction = 0;
-  int max_speed = 5;
+  int max_speed = 20;
   char message[10];
   uint32_t rand;
+  uint16_t i = 0;
+  uint8_t level = 0;
   while (1) {
+    if (level <= 10)
+    {
       /* USER CODE END WHILE */
-      HAL_Delay(100);
+      HAL_Delay(2);
 
       get_XY_data(&X_data, &Y_data);
 
-      if (X_data >= 30000) {
-              direction = 1;
-      } else if (X_data <= -30000) {
-              direction = -1;
-      }
+      X_speed += X_data > 2000 ? 1 : 0;
+      X_speed -= X_data < -2000 ? 1 : 0;
+      Y_speed += Y_data > 2000 ? 1 : 0;
+      Y_speed -= Y_data < -2000 ? 1 : 0;
 
-     if((X_speed >= 0 && X_speed <= max_speed) || (X_speed <= 0 && X_speed >= -max_speed))
-        if(X_speed == max_speed){
-            if(direction == -1)
-                X_speed += direction;
+      X_speed = X_speed > max_speed ? max_speed : X_speed;
+      X_speed = X_speed < -max_speed ? -max_speed : X_speed;
+      Y_speed = Y_speed > max_speed ? max_speed : Y_speed;
+      Y_speed = Y_speed < -max_speed ? -max_speed : Y_speed;
 
-        }
-     else if (X_speed == -max_speed) {
-        if (direction == 1)
-            X_speed += direction;
-     }
-     else
-         X_speed += direction;
-
-      if (Y_data >= 20000) {
-          direction = 1;
-      } else if (Y_data <= -20000) {
-          direction = -1;
-      }
-
-      if((Y_speed >= 0 && Y_speed <= max_speed) || (Y_speed <= 0 && X_speed >= -max_speed))
-          if(Y_speed == max_speed){
-              if(direction == -1)
-                  Y_speed += direction;
-
-          }
-          else if (Y_speed == -max_speed) {
-              if (direction == 1)
-                  Y_speed += direction;
-          }
-          else
-              Y_speed += direction;
-
-      ball_x = ball_x + X_speed;
-      ball_y = ball_y + Y_speed;
+      ball_x = ball_x + X_speed / 10;
+      ball_y = ball_y + Y_speed / 10;
       display_ball(current_ball, ball_x, ball_y);
       X_pos += X_data / 10;
       Y_pos += Y_data / 10;
-
-      if(X_data >= 20000 || X_data <= -20000) {
-          print("Direction: ");
-          itoa(direction, message, 10);
-          print(message);
-          print(", X_speed: ");
-          itoa(X_speed, message, 10);
-          print(message);
-          print(", X_data: ");
-          itoa(X_data, message, 10);
-          print(message);
-          print(", Y_speed: ");
-          itoa(Y_speed, message, 10);
-          print(message);
-          print(", Y_data: ");
-          itoa(Y_data, message, 10);
-          print(message);
-          print(", X_pos: ");
-          itoa(X_pos, message, 10);
-          print(message);
-          print(", Y_pos: ");
-          itoa(Y_pos, message, 10);
-          println(message);
+      
+      if ((abs(ball_x%290 - target_x%290) < 30) && (abs(ball_y%210 - target_y%210) < 30))
+      {
+        level++;
+        if (1 == level)
+        {
+          update_red_LED_timer(1000);
+        }
+        else if (2 == level)
+        {
+          update_red_LED_timer(500);
+        }
+        else if (3 == level)
+        {
+          update_red_LED_timer(250);
+        }
+        else if (4 == level)
+        {
+          update_red_LED_timer(100);
+        }
+        else if (5 == level)
+        {
+          update_red_LED_timer(50);
+        }
+        else if (6 == level)
+        {
+          update_red_LED_timer(0);
+          set_red_LED(1);
+          update_green_LED_timer(1000);
+          current_ball=1; // Green ball
+        }
+        else if (7 == level)
+        {
+          update_green_LED_timer(500);
+        }
+        else if (8 == level)
+        {
+          update_green_LED_timer(250);
+        }
+        else if (9 == level)
+        {
+          update_green_LED_timer(100);
+        }
+        else if (10 == level)
+        {
+          update_green_LED_timer(50);
+        }
+        else if (level > 10)
+        {
+          update_green_LED_timer(0);
+          set_green_LED(1);
+        }
+        target_x = get_random_number();
+        target_y = get_random_number();
+        display_target(target_x, target_y);
       }
+    }
+    else
+    {
+      display_win_screen();
+      HAL_Delay(10000);
+    }
+    
 
     /* USER CODE BEGIN 3 */
   }
