@@ -32,37 +32,24 @@
 #include "Helper/rng.h"
 
 /* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MAX_SPEED 20
 /* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
-LTDC_HandleTypeDef hltdc;
-
 /* USER CODE BEGIN PV */
-
+LTDC_HandleTypeDef hltdc;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+enum ball{red_ball = 0, green_ball = 1};
 /* USER CODE END 0 */
 
 /**
@@ -71,49 +58,37 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+  /* Initialize all configured peripherals */
   init_SPI5();
   init_LCD();
   init_LTDC();
   init_RNG();
+  init_USART1();
+  init_L3GD20();
+  init_LEDs();
 
-  uint32_t first_random_number = get_random_number(); // Throw away number. See RNG documentation
+  // Throw away number. See RNG documentation
+  uint32_t first_random_number = get_random_number();
 
   startup_sequence();
 
   // initialized ball and target
-  uint16_t current_ball = 0;
+  uint16_t current_ball = red_ball;
+
   uint32_t target_x = get_random_number();
   uint32_t target_y = get_random_number();
+
   uint32_t ball_x = get_random_number();
   uint32_t ball_y = get_random_number();
+
   display_target(target_x, target_y);
   display_ball(current_ball, ball_x, ball_y);
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  /* USER CODE BEGIN 2 */
-  init_LEDs();
-
-  // Initialize USART1 (ST-Link)
-  init_USART1();
 
   uint16_t red_timer = 0;
   uint16_t green_timer = 0;
@@ -121,17 +96,14 @@ int main(void)
   update_red_LED_timer(red_timer);
   update_green_LED_timer(green_timer);
 
-  init_L3GD20();
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   int16_t X_data, Y_data;
   int16_t X_speed = 0;
   int16_t Y_speed = 0;
-  uint16_t max_speed = 20;
   uint8_t level = 0;
+  /* End Initialize all configured peripherals */
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1) {
     if (level <= 10)
     {
@@ -147,10 +119,10 @@ int main(void)
       Y_speed -= Y_data < -2000 ? 1 : 0;
 
       // verify speed doesn't exceed max speed
-      X_speed = X_speed > max_speed ? max_speed : X_speed;
-      X_speed = X_speed < -max_speed ? -max_speed : X_speed;
-      Y_speed = Y_speed > max_speed ? max_speed : Y_speed;
-      Y_speed = Y_speed < -max_speed ? -max_speed : Y_speed;
+      X_speed = X_speed > MAX_SPEED ? MAX_SPEED : X_speed;
+      X_speed = X_speed < -MAX_SPEED ? -MAX_SPEED : X_speed;
+      Y_speed = Y_speed > MAX_SPEED ? MAX_SPEED : Y_speed;
+      Y_speed = Y_speed < -MAX_SPEED ? -MAX_SPEED : Y_speed;
 
       ball_x = ball_x + X_speed / 10;
       ball_y = ball_y + Y_speed / 10;
@@ -187,7 +159,7 @@ int main(void)
           update_red_LED_timer(0);
           set_red_LED(1);
           update_green_LED_timer(1000);
-          current_ball=1; // Green ball
+          current_ball= green_ball;
         }
         else if (7 == level)
         {
