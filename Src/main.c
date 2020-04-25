@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
@@ -15,6 +14,10 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
+  ******************************************************************************
+  * Creators        : Jacob Sorenson & Jared Knight
+  * Course          : CS5780
+  *                   University of Utah
   */
 /* USER CODE END Header */
 
