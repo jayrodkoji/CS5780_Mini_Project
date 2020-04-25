@@ -9,7 +9,6 @@ void init_RNG()
 
 uint32_t get_random_number()
 {
-  //while(!(RNG->SR & RNG_SR_DRDY_Msk) == 0); // Wait until random number is ready
-  while(RNG->SR & !(RNG->SR & 0x1)){}
+  while(RNG->SR & !(RNG->SR & 0x1)){}  // Wait until random number is ready
   return RNG->DR;
 }
