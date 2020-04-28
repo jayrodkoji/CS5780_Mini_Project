@@ -1,4 +1,5 @@
 #include "stm32f429xx.h"
+#include "stm32f4xx.h"
 #include "Helper/lcd.h"
 #include "Helper/spi.h"
 #include "The Game Will Begin In.h"
@@ -145,17 +146,17 @@ void ILI9341_SendData(uint8_t data) {
 }
 
 void ILI9341_Delay(volatile uint32_t delay) {
-	for (; delay != 0; delay--); 
+	for (; delay != 0; delay--);
 }
 
 void power_up_LCD()
 {
   /* CS high */
   CS_SET;
-  
+
   /* Init SPI */
   init_SPI5();
-  
+
   /* Initialization sequence */
   ILI9341_SendCommand(0xCA);
   ILI9341_SendData(0xC3);
@@ -293,22 +294,7 @@ void init_LCD()
   display_on();
 }
 
-void draw_rectangle(LTDC_Layer_TypeDef* p_layer,
-                    const uint32_t x_start,
-                    const uint32_t x_end,
-                    const uint32_t y_start,
-                    const uint32_t y_end)
-{
-  p_layer->WHPCR = x_end << LTDC_LxWHPCR_WHSPPOS_Pos | x_start << LTDC_LxWHPCR_WHSTPOS_Pos;
-  p_layer->WVPCR = y_end << LTDC_LxWVPCR_WVSPPOS_Pos | y_start << LTDC_LxWVPCR_WVSTPOS_Pos;
-  p_layer->PFCR = 0x01; // RGB888 pixel format
-  p_layer->CACR = 255; // constant alpha
-  p_layer->CR |= LTDC_LxCR_LEN; // enable layer
-
-  LTDC->SRCR = LTDC_SRCR_IMR;
-}
-
-void center_output(LTDC_Layer_TypeDef* p_layer, tImage* p_image, const uint8_t cfblr_offset)
+void center_output(LTDC_Layer_TypeDef* p_layer, const tImage* p_image, const uint8_t cfblr_offset)
 {
   p_layer->WHPCR = (TOTAL_W/2 + p_image->width/2) << LTDC_LxWHPCR_WHSPPOS_Pos |
                    (TOTAL_W/2 - p_image->width/2) << LTDC_LxWHPCR_WHSTPOS_Pos;
@@ -324,7 +310,7 @@ void center_output(LTDC_Layer_TypeDef* p_layer, tImage* p_image, const uint8_t c
   LTDC->SRCR = LTDC_SRCR_VBR;
 }
 
-void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, tImage* p_image, const uint8_t cfblr_offset)
+void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, const tImage* p_image, const uint8_t cfblr_offset)
 {
     uint32_t max_y = LCD_WIDTH - p_image->width;
     uint32_t max_x = LCD_HEIGHT - p_image->width;
@@ -351,15 +337,6 @@ void display_target(uint32_t x, uint32_t y){
 }
 
 void display_ball(uint16_t ball, uint32_t x, uint32_t y){
-    if(ball)
-        output_image(LTDC_Layer2, x, y, &green_ball, 4);
-    else
-        output_image(LTDC_Layer2, x, y, &red_ball2, 4);
-}
-
-void_move_ball(uint16_t ball){
-    uint32_t x = 0;
-    uint32_t y = 0;
     if(ball)
         output_image(LTDC_Layer2, x, y, &green_ball, 4);
     else

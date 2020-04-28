@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32f429xx.h"
+#include "stdlib.h"
 #include "Helper/l3gd20.h"
 #include "Helper/lcd.h"
 #include "Helper/led.h"
@@ -77,7 +78,7 @@ int main(void)
   init_LEDs();
 
   // Throw away number. See RNG documentation
-  uint32_t first_random_number = get_random_number();
+  (void)get_random_number();
 
   startup_sequence();
 

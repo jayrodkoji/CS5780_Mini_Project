@@ -37,11 +37,6 @@ uint8_t L3GD20_ID_match()
   return 0;
 }
 
-void EXTI0_IRQHandler()
-{
-  println("Hhhhhh");
-}
-
 void init_L3GD20()
 {
   RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN; // Enable GPIOC clock
@@ -51,22 +46,10 @@ void init_L3GD20()
   GPIOC->OSPEEDR |= GPIO_MODER_MODE1_0;
   CS_SET;
 
-  // Setup PA2 (DRDY interrupt)
-  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Enable GPIOC clock
-  GPIOA->MODER &= ~GPIO_MODER_MODE2_Msk;
-
-  SYSCFG->EXTICR[0] &= ~SYSCFG_EXTICR1_EXTI2_Msk;
-  EXTI->IMR |= EXTI_IMR_IM2;
-  EXTI->EMR |= EXTI_EMR_EM2;
-  NVIC_EnableIRQ(EXTI0_IRQn);
-
   write_L3GD20_register(0x21, 0x20); // Normal mode 7.2Hz HPF
-  // write_L3GD20_register(0x22, 0x08); // Enable DRDY interrupt
   write_L3GD20_register(0x23, 0x30); // 2000 dps
   write_L3GD20_register(0x24, 0x13); // High pass filter enable with LPF2 configuration
   write_L3GD20_register(0x20, 0xDB); // Enable X and Y axis at 760 Hz
-
-  println("Hi theresss");
 }
 
 void get_XY_data(int16_t* X_data, int16_t* Y_data)

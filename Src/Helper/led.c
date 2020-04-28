@@ -50,7 +50,7 @@ void init_LEDs()
   // Green timer
   TIM3->PSC = 7999; // 1ms timer count
   TIM3->DIER = TIM_DIER_CC1IE;
-  update_red_LED_timer(0);
+  update_green_LED_timer(0);
   TIM3->CR1 |= TIM_CR1_CEN;
   NVIC_EnableIRQ(TIM3_IRQn);
 }
