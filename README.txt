@@ -68,6 +68,9 @@ Protocols/Labs Used:
     Timers:
         LED flash frequency.
 
+    Interrupts:
+        LED functionality
+
     RNG:
         Random number generation.
 
