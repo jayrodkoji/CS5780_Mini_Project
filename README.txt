@@ -62,7 +62,7 @@ Protocols/Labs Used:
         Communication/control of l3gd20 gyroscope.
         Communication/control of LCD.
 
-    GPI:
+    GPIO:
         LED.
 
     Timers:
