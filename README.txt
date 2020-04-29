@@ -74,7 +74,7 @@ Protocols/Labs Used:
     RNG:
         Random number generation.
 
-    USART:
+    UART:
         Mainly in testing x and y data.
 
 
