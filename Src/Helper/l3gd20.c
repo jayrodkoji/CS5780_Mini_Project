@@ -13,7 +13,7 @@
 #include "stm32f4xx_hal.h"
 #include "Helper/l3gd20.h"
 #include "Helper/spi.h"
-#include "Helper/usart.h"
+#include "Helper/uart.h"
 
 // CS set and reset
 #define CS_SET GPIOC->ODR |= GPIO_ODR_OD1;

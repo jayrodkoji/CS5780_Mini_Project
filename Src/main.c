@@ -33,7 +33,7 @@
 #include "Helper/lcd.h"
 #include "Helper/led.h"
 #include "Helper/spi.h"
-#include "Helper/usart.h"
+#include "Helper/uart.h"
 #include "Helper/rng.h"
 
 /* USER CODE END Includes */
@@ -50,6 +50,7 @@ LTDC_HandleTypeDef hltdc;
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 void SystemClock_Config(void);
+void print_x_y_data(int16_t X_data, int16_t Y_data);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -116,12 +117,13 @@ int main(void)
       HAL_Delay(2);
 
       get_XY_data(&X_data, &Y_data);
+      print_x_y_data(X_data, Y_data);
 
       // update speed when x/y value is large/small enough
-      X_speed += X_data > 2000 ? 1 : 0;
-      X_speed -= X_data < -2000 ? 1 : 0;
-      Y_speed += Y_data > 2000 ? 1 : 0;
-      Y_speed -= Y_data < -2000 ? 1 : 0;
+      X_speed -= X_data > 2000 ? 1 : 0;
+      X_speed += X_data < -2000 ? 1 : 0;
+      Y_speed -= Y_data > 2000 ? 1 : 0;
+      Y_speed += Y_data < -2000 ? 1 : 0;
 
       // verify speed doesn't exceed max speed
       X_speed = X_speed > MAX_SPEED ? MAX_SPEED : X_speed;
@@ -200,6 +202,19 @@ int main(void)
       HAL_Delay(10000);
     }
   }
+}
+
+/*
+ * For verifying x and y data from gyroscope
+ */
+void print_x_y_data(int16_t X_data, int16_t Y_data){
+    char buf[10];
+    itoa(X_data, buf, 10);
+    print("X data: ");
+    print(buf);
+    itoa(Y_data, buf, 10);
+    print(", Y data: ");
+    println(buf);
 }
 
 /**
