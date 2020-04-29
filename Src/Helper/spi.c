@@ -1,3 +1,13 @@
+/**
+  ******************************************************************************
+  * @file           : spi.c
+  * @brief          : Helper functions for spi
+  ******************************************************************************
+  * Creators        : Jacob Sorenson & Jared Knight
+  * Course          : CS5780
+  *                   University of Utah
+  */
+
 #include "stm32f429xx.h"
 #include "stm32f4xx_hal.h"
 #include "Helper/spi.h"

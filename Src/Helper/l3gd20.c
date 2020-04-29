@@ -6,6 +6,7 @@
   * Creators        : Jacob Sorenson & Jared Knight
   * Course          : CS5780
   *                   University of Utah
+  *
   */
 
 #include "stm32f429xx.h"
@@ -17,21 +18,6 @@
 // CS set and reset
 #define CS_SET GPIOC->ODR |= GPIO_ODR_OD1;
 #define CS_RESET GPIOC->ODR &= ~GPIO_ODR_OD1;
-
-void init_L3GD20()
-{
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN; // Enable GPIOC clock
-
-    // Setup PC1 (CS)
-    GPIOC->MODER |= GPIO_MODER_MODE1_0;
-    GPIOC->OSPEEDR |= GPIO_MODER_MODE1_0;
-    CS_SET;
-
-    write_L3GD20_register(0x21, 0x20); // Normal mode 7.2Hz HPF
-    write_L3GD20_register(0x23, 0x30); // 2000 dps
-    write_L3GD20_register(0x24, 0x13); // High pass filter enable with LPF2 configuration
-    write_L3GD20_register(0x20, 0xDB); // Enable X and Y axis at 760 Hz
-}
 
 void read_L3GD20_register(uint8_t address, uint8_t* value)
 {
@@ -60,6 +46,21 @@ uint8_t L3GD20_ID_match()
     return 1;
   }
   return 0;
+}
+
+void init_L3GD20()
+{
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN; // Enable GPIOC clock
+
+    // Setup PC1 (CS)
+    GPIOC->MODER |= GPIO_MODER_MODE1_0;
+    GPIOC->OSPEEDR |= GPIO_MODER_MODE1_0;
+    CS_SET;
+
+    write_L3GD20_register(0x21, 0x20); // Normal mode 7.2Hz HPF
+    write_L3GD20_register(0x23, 0x30); // 2000 dps
+    write_L3GD20_register(0x24, 0x13); // High pass filter enable with LPF2 configuration
+    write_L3GD20_register(0x20, 0xDB); // Enable X and Y axis at 760 Hz
 }
 
 void get_XY_data(int16_t* X_data, int16_t* Y_data)

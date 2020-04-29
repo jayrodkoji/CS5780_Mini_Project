@@ -1,3 +1,15 @@
+/**
+  ******************************************************************************
+  * @file           : lcd.c
+  * @brief          : Helper functions for lcd initialization and displaying.
+  ******************************************************************************
+  * Creators        : Jacob Sorenson & Jared Knight
+  * Course          : CS5780
+  *                   University of Utah
+  *
+  * Helper Source:    stm32f4-discovery.net
+  */
+
 #include "stm32f429xx.h"
 #include "stm32f4xx.h"
 #include "Helper/lcd.h"
@@ -22,10 +34,10 @@ const uint16_t HBP = 20;
 const uint16_t VFP = 4;
 const uint16_t VSYNC = 2;
 const uint16_t VBP = 2;
-const uint16_t ACTIVE_W = 10 + 20 + 240 - 1; // HSYNC + HBP + LCD_WIDTH - 1;
-const uint16_t ACTIVE_H = 2 + 2 + 320 - 1; // VSYNC + VBP + LCD_HEIGHT - 1;
-const uint16_t TOTAL_W = 10 + 20 + 240 + 10 - 1; // HSYNC + HBP + LCD_WIDTH + HFP - 1;
-const uint16_t TOTAL_H = 2 + 2 + 320 + 4 - 1; // VSYNC + VBP + LCD_HEIGHT + VFP - 1;
+const uint16_t ACTIVE_W = HSYNC + HBP + LCD_WIDTH - 1;
+const uint16_t ACTIVE_H = VSYNC + VBP + LCD_HEIGHT - 1;
+const uint16_t TOTAL_W = HSYNC + HBP + LCD_WIDTH + HFP - 1;
+const uint16_t TOTAL_H = VSYNC + VBP + LCD_HEIGHT + VFP - 1;
 
 // Commands
 #define ILI9341_RESET         0x01
@@ -294,6 +306,9 @@ void init_LCD()
   display_on();
 }
 
+/*
+ * Display output images in the center of the screen.
+ */
 void center_output(LTDC_Layer_TypeDef* p_layer, const tImage* p_image, const uint8_t cfblr_offset)
 {
   p_layer->WHPCR = (TOTAL_W/2 + p_image->width/2) << LTDC_LxWHPCR_WHSPPOS_Pos |
@@ -310,6 +325,9 @@ void center_output(LTDC_Layer_TypeDef* p_layer, const tImage* p_image, const uin
   LTDC->SRCR = LTDC_SRCR_VBR;
 }
 
+/*
+ * Display image at specific x, y cordinates
+ */
 void output_image(LTDC_Layer_TypeDef* p_layer, uint32_t x, uint32_t y, const tImage* p_image, const uint8_t cfblr_offset)
 {
     uint32_t max_y = LCD_WIDTH - p_image->width;
@@ -352,6 +370,9 @@ void display_win_screen()
   center_output(LTDC_Layer2, &YOUWIN, 4);
 }
 
+/*
+ * Display intro text and countdown from 3 to 1
+ */
 void startup_sequence()
 {
   center_output(LTDC_Layer1, &TheGameWillBeginIn, 4);

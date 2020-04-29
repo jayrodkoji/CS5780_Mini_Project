@@ -1,3 +1,13 @@
+/**
+  ******************************************************************************
+  * @file           : led.c
+  * @brief          : Helper functions for lcd manipulation
+  ******************************************************************************
+  * Creators        : Jacob Sorenson & Jared Knight
+  * Course          : CS5780
+  *                   University of Utah
+  */
+
 #include "stm32f429xx.h"
 #include "stm32f4xx_hal.h"
 #include "Helper/led.h"
