@@ -6,7 +6,7 @@ Overview:
     Upon completion of the red level the player will enter the green level indicated by a green ball. To aid the player,
     a red and green led have been added. As the player hits targets the red led will flash faster and faster until it
     locks on solid. This indicated completion of the red level. The green level follows the same pattern. Be careful not
-    to let the blinking light cause added anxiety. Upon completing the green level the play will be welcomed with a sceen
+    to let the blinking light cause added anxiety. Upon completing the green level the play will be welcomed with a screen
     declaring them a winner.
 
 
