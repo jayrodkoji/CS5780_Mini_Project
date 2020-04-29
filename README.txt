@@ -69,7 +69,7 @@ Protocols/Labs Used:
         LED flash frequency.
 
     Interrupts:
-        LED functionality
+        LED functionality.
 
     RNG:
         Random number generation.
